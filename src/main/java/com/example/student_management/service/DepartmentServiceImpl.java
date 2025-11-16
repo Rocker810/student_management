@@ -116,7 +116,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         getDepartmentById(departmentId);
         return courseRepository.countByDepartmentDepartmentId(departmentId);
     }
-    
+
 
 
 }
