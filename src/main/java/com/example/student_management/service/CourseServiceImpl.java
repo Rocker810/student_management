@@ -32,11 +32,12 @@ public class CourseServiceImpl implements CourseService {
             throw new RuntimeException("Course code already exists: " + course.getCourseCode());
         }
 
-        // Verify department exists
+        // Verify department exists AND set it
         if (course.getDepartment() != null && course.getDepartment().getDepartmentId() != null) {
-            departmentRepository.findById(course.getDepartment().getDepartmentId())
+            var department = departmentRepository.findById(course.getDepartment().getDepartmentId())
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Department not found with id: " + course.getDepartment().getDepartmentId()));
+            course.setDepartment(department);  // ✅ Set the fetched department
         }
 
         // Set default values
@@ -104,22 +105,27 @@ public class CourseServiceImpl implements CourseService {
     public Courses updateCourse(Long id, Courses courseDetails) {
         Courses course = getCourseById(id);
 
+        // ✅ FIX: Trim and use case-insensitive comparison to handle whitespace/case issues
+        String existingCode = course.getCourseCode() != null ? course.getCourseCode().trim() : "";
+        String newCode = courseDetails.getCourseCode() != null ? courseDetails.getCourseCode().trim() : "";
+
         // Check if code is being changed and already exists
-        if (!course.getCourseCode().equals(courseDetails.getCourseCode()) &&
-                courseRepository.existsByCourseCode(courseDetails.getCourseCode())) {
-            throw new RuntimeException("Course code already exists: " + courseDetails.getCourseCode());
+        if (!existingCode.equalsIgnoreCase(newCode) &&
+                courseRepository.existsByCourseCode(newCode)) {
+            throw new RuntimeException("Course code already exists: " + newCode);
         }
 
-        // Verify department if changed
+        // Validation 2: Verify department exists if changed AND set it
         if (courseDetails.getDepartment() != null &&
                 courseDetails.getDepartment().getDepartmentId() != null) {
-            departmentRepository.findById(courseDetails.getDepartment().getDepartmentId())
+            var department = departmentRepository.findById(courseDetails.getDepartment().getDepartmentId())
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Department not found with id: " + courseDetails.getDepartment().getDepartmentId()));
+            courseDetails.setDepartment(department);  // Set the fetched department
         }
 
-        // Update fields
-        course.setCourseCode(courseDetails.getCourseCode());
+        // Update fields (use trimmed course code)
+        course.setCourseCode(newCode);
         course.setCourseName(courseDetails.getCourseName());
         course.setCourseDescription(courseDetails.getCourseDescription());
         course.setCredits(courseDetails.getCredits());

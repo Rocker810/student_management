@@ -1,6 +1,7 @@
 package com.example.student_management.model;
 
 import com.example.student_management.enums.AddressType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class Address {
     private Long addressId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"addresses", "hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 

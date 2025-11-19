@@ -1,6 +1,7 @@
 package com.example.student_management.model;
 
 import com.example.student_management.enums.EnrollmentStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class Enrollments {
 
     @NotNull(message = "Student is required")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"addresses", "hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 

@@ -33,11 +33,12 @@ public class FeeServiceImpl implements FeeService {
 
     @Override
     public Fee createFee(Fee fee) {
-        // Validate student exists
+        // Validate student exists AND set it
         if (fee.getStudent() != null && fee.getStudent().getStudentId() != null) {
-            studentRepository.findById(fee.getStudent().getStudentId())
+            var student = studentRepository.findById(fee.getStudent().getStudentId())
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Student not found with id: " + fee.getStudent().getStudentId()));
+            fee.setStudent(student);  // ✅ Set the fetched student
         }
 
         // Set default values
@@ -134,11 +135,25 @@ public class FeeServiceImpl implements FeeService {
     public Fee updateFee(Long id, Fee feeDetails) {
         Fee fee = getFeeById(id);
 
-        // Update fields
+        // Verify student exists if changed AND set it
+        if (feeDetails.getStudent() != null && feeDetails.getStudent().getStudentId() != null) {
+            var student = studentRepository.findById(feeDetails.getStudent().getStudentId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Student not found with id: " + feeDetails.getStudent().getStudentId()));
+            feeDetails.setStudent(student);
+        }
+
+        // ✅ FIX: Update ALL fields including payment status and payment date
+        fee.setStudent(feeDetails.getStudent());
         fee.setSemester(feeDetails.getSemester());
         fee.setFeeType(feeDetails.getFeeType());
         fee.setAmount(feeDetails.getAmount());
+        fee.setPaidAmount(feeDetails.getPaidAmount());
         fee.setDueDate(feeDetails.getDueDate());
+        fee.setPaymentDate(feeDetails.getPaymentDate());  // ✅ Now updates payment date
+        fee.setPaymentStatus(feeDetails.getPaymentStatus());  // ✅ Now updates payment status
+        fee.setPaymentMethod(feeDetails.getPaymentMethod());  // ✅ Now updates payment method
+        fee.setTransactionId(feeDetails.getTransactionId());  // ✅ Now updates transaction ID
         fee.setUpdatedAt(LocalDateTime.now());
 
         return feeRepository.save(fee);

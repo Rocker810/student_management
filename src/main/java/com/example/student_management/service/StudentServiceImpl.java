@@ -35,11 +35,11 @@ public class StudentServiceImpl implements StudentService {
         {
             throw new RuntimeException("Email already exists" + student.getEmail());
         }
-        // Validation 3: Verify department exists
         if (student.getDepartment() != null && student.getDepartment().getDepartmentId() != null) {
-            departmentRepository.findById(student.getDepartment().getDepartmentId())
+            var department = departmentRepository.findById(student.getDepartment().getDepartmentId())
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Department not found with id: " + student.getDepartment().getDepartmentId()));
+            student.setDepartment(department);  // ✅ FIX: Actually set the fetched department
         }
 
         // Set default values
