@@ -1,0 +1,35 @@
+/* src/layout/Layout.css */
+:root {
+  --sidebar-width: 250px;
+  --deep-blue: #0a1a44;
+  --light-grey: #f5f7fb;
+}
+
+.layout-root {
+  display: flex;
+  min-height: 100vh;
+  background: var(--light-grey);
+}
+
+/* sidebar occupies flex area; main content scrolls independently */
+.layout-root > aside,
+.layout-root > .sidebar {
+  width: var(--sidebar-width);
+  flex: 0 0 var(--sidebar-width);
+}
+
+.layout-main {
+  flex: 1;
+  padding: 28px;
+  overflow-y: auto;
+}
+
+/* stacked on small screens */
+@media (max-width: 880px) {
+  .layout-root {
+    flex-direction: column;
+  }
+  .layout-main {
+    padding: 16px;
+  }
+}

@@ -1,0 +1,59 @@
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+.content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--deep-blue);
+  margin-bottom: 20px;
+}
+
+.card {
+  background: var(--white);
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 18px;
+}
+
+.table-modern {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-modern th {
+  background: var(--deep-blue);
+  color: var(--white);
+  padding: 12px;
+}
+
+.table-modern td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.btn-primary {
+  background: var(--deep-blue);
+  color: white;
+  padding: 8px 14px;
+  border: none;
+}
+
+.btn-danger {
+  background: #b91c1c;
+  color: white;
+  padding: 8px 14px;
+}
+
+.btn-secondary {
+  background: var(--dark-grey);
+  color: white;
+}
