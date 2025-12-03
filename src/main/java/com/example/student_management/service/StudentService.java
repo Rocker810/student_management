@@ -2,7 +2,7 @@ package com.example.student_management.service;
 
 import com.example.student_management.enums.StudentStatus;
 import com.example.student_management.model.Student;
-
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface StudentService {
@@ -32,4 +32,6 @@ public interface StudentService {
     // Statistics operations
     long countStudentsByDepartment(Long departmentId);
     List<Student> getStudentsWithMinGpa(Double minGpa);
+    List<Student> searchStudents(String keyword);
+    List<Student> filterStudents(StudentStatus status, Long departmentId, BigDecimal minGpa);
 }

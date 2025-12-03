@@ -6,7 +6,7 @@ import com.example.student_management.service.StudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -66,6 +66,21 @@ public class StudentController {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Student>> getStudentsByStatus(@PathVariable StudentStatus status) {
         List<Student> students = studentService.getStudentsByStatus(status);
+        return ResponseEntity.ok(students);
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<Student>> searchStudents(@RequestParam String keyword) {
+        List<Student> students = studentService.searchStudents(keyword);
+        return ResponseEntity.ok(students);
+    }
+
+    // Filter endpoint
+    @GetMapping("/filter")
+    public ResponseEntity<List<Student>> filterStudents(
+            @RequestParam(required = false) StudentStatus status,
+            @RequestParam(required = false) Long departmentId,
+            @RequestParam(required = false) BigDecimal minGpa) {
+        List<Student> students = studentService.filterStudents(status, departmentId, minGpa);
         return ResponseEntity.ok(students);
     }
 }

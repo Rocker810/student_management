@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,4 +40,29 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     // Count students by department
     long countByDepartmentDepartmentId(Long departmentId);
+
+    @Query("SELECT s FROM Student s WHERE " +
+            "LOWER(s.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(s.lastName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(s.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(s.studentNumber) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Student> searchStudents(@Param("keyword") String keyword);
+
+    // Filter by status AND department
+    List<Student> findByStudentStatusAndDepartmentDepartmentId(StudentStatus status, Long departmentId);
+
+    // Filter by GPA range
+    @Query("SELECT s FROM Student s WHERE s.gpa BETWEEN :minGpa AND :maxGpa")
+    List<Student> findByGpaBetween(@Param("minGpa") BigDecimal minGpa, @Param("maxGpa") BigDecimal maxGpa);
+
+    // Combined filter query
+    @Query("SELECT s FROM Student s WHERE " +
+            "(:status IS NULL OR s.studentStatus = :status) AND " +
+            "(:departmentId IS NULL OR s.department.departmentId = :departmentId) AND " +
+            "(:minGpa IS NULL OR s.gpa >= :minGpa)")
+    List<Student> filterStudents(
+            @Param("status") StudentStatus status,
+            @Param("departmentId") Long departmentId,
+            @Param("minGpa") BigDecimal minGpa
+    );
 }

@@ -8,7 +8,7 @@ import com.example.student_management.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -176,6 +176,18 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> getStudentsWithMinGpa(Double minGpa)
     {
         return studentRepository.findStudentsWithMinGpa(minGpa);
+    }
+    @Override
+    public List<Student> searchStudents(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return studentRepository.findAll();
+        }
+        return studentRepository.searchStudents(keyword.trim());
+    }
+
+    @Override
+    public List<Student> filterStudents(StudentStatus status, Long departmentId, BigDecimal minGpa) {
+        return studentRepository.filterStudents(status, departmentId, minGpa);
     }
 
 }

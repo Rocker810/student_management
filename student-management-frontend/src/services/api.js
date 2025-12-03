@@ -43,5 +43,14 @@ export const courseAPI = makeResource('courses');
 export const addressAPI = makeResource('addresses');
 export const enrollmentAPI = makeResource('enrollments');
 export const feeAPI = makeResource('fees');
+export const searchStudents = (keyword) =>
+    api.get(`/students/search?keyword=${encodeURIComponent(keyword)}`);
+export const filterStudents = (filters) => {
+    const params = new URLSearchParams();
+    if (filters.status) params.append('status', filters.status);
+    if (filters.departmentId) params.append('departmentId', filters.departmentId);
+    if (filters.minGpa) params.append('minGpa', filters.minGpa);
+    return api.get(`/students/filter?${params.toString()}`);
+};
 
 export default api;
